@@ -1,0 +1,51 @@
+# Python-specific
+*.pyc
+*.pyo
+__pycache__/
+*.pyc
+
+# Django-specific
+*.log
+db.sqlite3
+/media
+/staticfiles
+
+# Development tools and environment
+.env
+/.venv
+/.vscode
+/.idea
+/.pytest_cache
+/.coverage
+
+# System-specific
+.DS_Store
+Thumbs.db
+
+# Ignore all compiled JavaScript
+*.js
+
+# Ignore all compiled CSS
+*.css
+
+# Ignore all compiled HTML
+*.html
+
+# Ignore all compiled fonts
+*.woff
+*.woff2
+*.ttf
+
+# Ignore all compiled images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
+*.svg
+
+# Ignore Python bytecode cache
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
