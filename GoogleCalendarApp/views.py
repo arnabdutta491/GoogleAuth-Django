@@ -1,14 +1,16 @@
 # views.py
 
 from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from urllib import parse
-from django.shortcuts import redirect
-from django.views import View
+from rest_framework.generics import GenericAPIView
+
 import json
 import os
+from rest_framework.response import Response
 
-CLIENT_ID = os.getenv('CLIENT_ID')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+
+
 REDIRECT_URI = os.getenv('REDIRECT_URI')
 AUTHORIZATION_BASE_URL = os.getenv('AUTHORIZATION_BASE_URL')
 TOKEN_URL = os.getenv('TOKEN_URL')
@@ -16,9 +18,27 @@ SCOPE = os.getenv('SCOPE')
 API_EVENTS_URL = os.getenv('API_EVENTS_URL')
 
 
-class GoogleCalendarInitView(View):
+
+
+class InitView(GenericAPIView):
     def get(self, request):
-        print(os.getenv('SCOPES'))
+        return render(request,'promt.html')
+    
+
+class GoogleCalendarInitView(GenericAPIView):
+    def get(self, request):
+        id = request.GET.get('id')
+        key = request.GET.get('key')
+        global CLIENT_ID
+        global CLIENT_SECRET
+        if id is None:
+            CLIENT_ID = os.getenv('CLIENT_ID')
+        else:
+            CLIENT_ID = id
+        if key is None:
+            CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+        else:
+            CLIENT_SECRET = key
         params = {
             'client_id': CLIENT_ID,
             'redirect_uri': REDIRECT_URI,
@@ -26,12 +46,14 @@ class GoogleCalendarInitView(View):
             'response_type': 'code',
         }
         authorization_url = AUTHORIZATION_BASE_URL + '?' + parse.urlencode(params)
+        if key is not None:
+            return Response({'data':authorization_url},status=200)
         return redirect(authorization_url)
 
 
-class GoogleCalendarRedirectView(View):
+class GoogleCalendarRedirectView(GenericAPIView):
     def get(self, request):
-
+        # import pdb;pdb.set_trace()
         code = request.GET.get('code')
         data = {
             'code': code,
